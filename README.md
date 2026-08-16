@@ -1,141 +1,258 @@
 # Volatility Regime Decision System
 
-**A Quantitative Finance & Information Systems Research Project**  
-*By Yash Keram* | [GitHub Profile](https://github.com/yashkeram)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-Numerical%20Computing-013243?logo=numpy&logoColor=white)](https://numpy.org/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-11557c?logo=matplotlib&logoColor=white)](https://matplotlib.org/)
+[![yfinance](https://img.shields.io/badge/yfinance-Market%20Data-6f42c1)](https://github.com/ranaroussi/yfinance)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github&logoColor=white)](https://github.com/yashkeram/Volatility-Regime-Decision-System-Refurbished)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-This project is a quantitative research and decision-support framework designed to analyze the **NIFTY 50 Index**. By evaluating market trends, historical volatility, and drawdown conditions, the system detects prevailing market regimes and translates them into structured capital allocation guidance.
+A systematic quantitative research framework designed to analyze the **NIFTY 50 Index**. By evaluating market trends, historical volatility, and drawdown conditions, the system detects prevailing market regimes and translates them into structured, actionable capital allocation guidance.
+
+The project is designed as a reproducible research pipeline that transforms raw market data into volatility states, regime classifications, decision rules, and a final portfolio posture.
 
 ---
 
-## Decision Philosophy
+## Research Objective
 
-Markets can be bullish or bearish under vastly different conditions (e.g., *Low Volatility Bull* vs. *High Volatility Bull*). This system attempts to classify the market environment before determining the appropriate portfolio response based on the following principles:
+The objective of this project is to investigate whether classifying market environments (regimes) prior to making allocation decisions can improve risk-adjusted performance and preserve capital during market stress. 
 
-*   **Layered Architecture:** Separate measurement, classification, and decision-making.
-*   **Independent Risk Assessment:** Treat risk and volatility as independent dimensions from the price trend.
-*   **Capital Preservation:** Convert market conditions into explicit exposure guidance, preserving capital when risk conditions deteriorate.
-*   **Transparency over Black Box:** Utilize explicit, inspectable decision rules rather than opaque signals.
+A market can be bullish under very different conditions (e.g., *Low Volatility Bull* vs. *High Volatility Bull*). This research pipeline combines:
 
-## Methodological Framework
+* Historical price data
+* Volatility term structures
+* Regime detection algorithms
+* Explicit rule-based decision logic
+* Dynamic capital allocation sizing
 
-The architecture follows a strict, layered sequence where each stage depends on the preceding output:
+The goal is not to predict individual market tops or bottoms, but to build and evaluate a **transparent, rules-based investment process** that adapts to changing risk environments.
+
+---
+
+## Research Pipeline
 
 ```text
-Raw Market Data 
+Raw Market Data
        │
        ▼
-Validated Market Data (Measurement)
+01. Data Ingestion
        │
        ▼
-Derived Market Features
+02. Data Cleaning
        │
        ▼
-Volatility State 
+03. Feature Engineering
        │
        ▼
-Market Regime (Classification)
+04. Volatility Model
        │
        ▼
-Decision State (Decision)
+05. Regime Detection
        │
        ▼
-Explicit Decision Rules
+06. Decision Logic
        │
        ▼
-Capital Allocation (Allocation)
+07. Decision Rules
+       │
+       ▼
+08. Capital Allocation
 ```
 
----
-
-## Project Structure
+## Project Architecture
 
 ```text
 Volatility-Regime-Decision-System-Refurbished/
 │
 ├── Data/
-│   ├── Raw/               # nifty50_raw.csv
-│   └── Processed/         # Layered analytical datasets
+│   ├── Raw/
+│   │   └── nifty50_raw.csv
+│   │
+│   └── Processed/
+│       ├── nifty50_clean.csv
+│       ├── nifty50_features.csv
+│       ├── nifty50_volatility_model.csv
+│       ├── nifty50_regime_detection.csv
+│       ├── nifty50_decision_logic.csv
+│       ├── nifty50_decision_rules.csv
+│       └── nifty50_capital_allocation.csv
 │
-├── Notebooks/             # Exploratory analysis
-├── Outputs/               # Charts, Reports, and Tables
-├── Python/                # Core pipeline scripts (01 to 08)
+├── Notebooks/
+│
+├── Outputs/
+│   ├── Charts/
+│   ├── Reports/
+│   └── Tables/
+│
+├── Python/
+│   ├── 01_data_ingestion.py
+│   ├── 02_data_cleaning.py
+│   ├── 03_feature_engineering.py
+│   ├── 04_volatility_model.py
+│   ├── 05_regime_detection.py
+│   ├── 06_decision_logic.py
+│   ├── 07_decision_rules.py
+│   └── 08_capital_allocation.py
 │
 ├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
 
----
+## Technology Stack
 
-## The Analytical Pipeline
+| Category        | Technology     |
+| --------------- | -------------- |
+| Language        | Python         |
+| Data Analysis   | Pandas, NumPy  |
+| Market Data     | yfinance       |
+| Visualization   | Matplotlib     |
+| Version Control | Git, GitHub    |
+| Research Output | CSV, Markdown  |
 
-The system processes 2,860 trading observations (2015-01-02 to 2026-08-14) across 8 sequential modules. 
+## Target Market
 
-| Module | Purpose | Key Outputs / Features | Output File |
+This system strictly focuses on the benchmark Indian equities index.
+
+| Market Index | Ticker | Observations | Historical Period |
 | :--- | :--- | :--- | :--- |
-| **01. Data Ingestion** | Downloads historical NIFTY 50 (`^NSEI`) data. | Raw OHLCV data. | `nifty50_raw.csv` |
-| **02. Data Cleaning** | Validates and cleans raw data. | Log returns, missing value checks. | `nifty50_clean.csv` |
-| **03. Feature Engineering** | Creates technical/statistical features. | Moving Averages, Volatility Ratios, ATR, Drawdowns. | `nifty50_features.csv` |
-| **04. Volatility Model** | Builds a multi-dimensional volatility profile. | Volatility Term Spread, Acceleration, Stress Score. | `nifty50_volatility_model.csv` |
-| **05. Regime Detection** | Identifies the prevailing market regime. | E.g., *Low Volatility Bull*, *Crisis Bear*. | `nifty50_regime_detection.csv` |
-| **06. Decision Logic** | Translates regime into a structured decision. | Market Bias, Exposure Guidance, Portfolio Posture. | `nifty50_decision_logic.csv` |
-| **07. Decision Rules** | Applies explicit, rule-based bounds. | Rule Scores, System Actions (e.g., REVIEW). | `nifty50_decision_rules.csv` |
-| **08. Capital Allocation**| Converts logic to portfolio allocation. | Target Equity/Cash Exposure, Position Size Guidance. | `nifty50_capital_allocation.csv` |
+| NIFTY 50 Index | ^NSEI | 2,860 Trading Days | 2015-01-02 → 2026-08-14 |
 
-> **Latest Verified Snapshot (Aug 14, 2026):**  
-> The system classified the NIFTY 50 as a **Low Volatility Bull** regime, suggesting a **Balanced** capital posture with a target equity exposure of **55.00%**.
+## Methodology
 
----
+The pipeline executes sequentially, with each script transforming the data for the next stage.
 
-## Getting Started & Reproducibility 
+| Module | Python Script | Purpose | Primary Output |
+| :--- | :--- | :--- | :--- |
+| **01. Data Ingestion** | `01_data_ingestion.py` | Downloads raw historical NIFTY 50 market data. | `nifty50_raw.csv` |
+| **02. Data Cleaning** | `02_data_cleaning.py` | Validates data, handles missing values, and calculates log returns. | `nifty50_clean.csv` |
+| **03. Feature Engineering**| `03_feature_engineering.py` | Creates technical features (Moving Averages, ATR, Drawdowns). | `nifty50_features.csv` |
+| **04. Volatility Model** | `04_volatility_model.py` | Builds a multi-dimensional volatility profile (Z-Scores, Momentum). | `nifty50_volatility_model.csv` |
+| **05. Regime Detection** | `05_regime_detection.py` | Classifies the current market regime (e.g., *Low Volatility Bull*). | `nifty50_regime_detection.csv` |
+| **06. Decision Logic** | `06_decision_logic.py` | Scores trend, volatility, and risk to form a decision framework. | `nifty50_decision_logic.csv` |
+| **07. Decision Rules** | `07_decision_rules.py` | Applies explicit bounds to determine final system actions. | `nifty50_decision_rules.csv` |
+| **08. Capital Allocation** | `08_capital_allocation.py` | Converts rules into portfolio guidance (Target Equity vs. Cash). | `nifty50_capital_allocation.csv` |
 
-### Prerequisites
-*   **Python 3.x**
+## Outputs
 
-### 1. Setup the Virtual Environment
+### Processed Data
+The pipeline progressively builds these datasets, saving them in the processed data folder:
 
-**Windows PowerShell:**
-```powershell
-# Create virtual environment
-python -m venv .venv
-
-# Activate it
-.\.venv\Scripts\Activate.ps1
-
-# Install dependencies
-pip install -r requirements.txt
+```text
+Data/Processed/
+├── nifty50_clean.csv
+├── nifty50_features.csv
+├── nifty50_volatility_model.csv
+├── nifty50_regime_detection.csv
+├── nifty50_decision_logic.csv
+├── nifty50_decision_rules.csv
+└── nifty50_capital_allocation.csv
 ```
+## Reproducibility
 
-### 2. Run the Pipeline
+To recreate the research outputs from scratch, run the modules sequentially. Each stage depends on the data generated by the step right before it.
 
-Execute the modules sequentially. Each script relies on the `.csv` generated by the previous step:
-
-```powershell
-python Python\01_data_ingestion.py
-python Python\02_data_cleaning.py
-python Python\03_feature_engineering.py
-python Python\04_volatility_model.py
-python Python\05_regime_detection.py
-python Python\06_decision_logic.py
-python Python\07_decision_rules.py
-python Python\08_capital_allocation.py
+```bash
+python Python/01_data_ingestion.py
+python Python/02_data_cleaning.py
+python Python/03_feature_engineering.py
+python Python/04_volatility_model.py
+python Python/05_regime_detection.py
+python Python/06_decision_logic.py
+python Python/07_decision_rules.py
+python Python/08_capital_allocation.py
 ```
+## Research Design Principles
+
+This framework was built on several core quantitative principles:
+
+* **Layered Architecture:** Strictly separate measurement (*what is happening?*), classification (*what regime are we in?*), and decision-making (*what should we do?*).
+* **Independent Risk Assessment:** Treat market risk and volatility as completely independent dimensions from the price trend.
+* **Capital Preservation:** Convert market conditions into explicit exposure guidance. The system prioritizes preserving capital when risk conditions deteriorate.
+* **Rules Over Discretion:** Prefer a transparent, fully inspectable rule framework over an opaque "black-box" signal. 
+* **Confirmation Required:** Only increase portfolio exposure when multiple market conditions consistently support it.
+
+## Limitations
+
+This is a quantitative research project and should **not** be interpreted as investment advice. Important limitations to keep in mind include:
+
+* **Historical Bias:** Past historical performance does not guarantee future results.
+* **Unprecedented Events:** Rule-based systems can fail during extreme or unprecedented market conditions.
+* **Rapid Shifts:** Volatility regimes can change rapidly and unpredictably.
+* **Missing Costs:** The current system does not model real-world transaction costs, slippage, or taxes.
+* **Not a Live Strategy:** Extensive backtesting and out-of-sample validation should be rigorously performed before treating this framework as a live trading strategy.
 
 ---
 
 ## Future Development
 
-While currently functional, planned extensions for this framework include:
+I am continuously looking to improve this framework. Planned future extensions include:
 
-*   **Data & Features:** Integration of India VIX, macroeconomic variables, and cross-asset confirmation.
-*   **Validation:** Walk-forward validation, robust backtesting, and out-of-sample testing.
-*   **Real-World Modeling:** Transaction cost modeling, tax implications, and portfolio-level performance attribution.
-*   **Reporting:** Interactive dashboards and automated scenario/stress testing.
+* **Alternative Data:** Integration of India VIX and macroeconomic variables.
+* **Cross-Asset Validation:** Confirming signals using other asset classes.
+* **Granular Analysis:** Sector-level regime analysis.
+* **Robust Testing:** Walk-forward validation and rigorous out-of-sample testing.
+* **Real-World Modeling:** Adding transaction-cost modeling and risk-adjusted performance metrics.
+* **Reporting:** Building interactive dashboards and automated scenario/stress testing.
 
 ---
 
-## Disclaimer & Limitations
+## Disclaimer
 
-**For educational, research, and quantitative-analysis purposes only.** 
+**For educational, research, and quantitative-analysis purposes only.**
 
-The outputs generated by this system are research signals and decision-support information. They should **not** be interpreted as financial advice, investment recommendations, or guarantees of future performance. Historical data does not guarantee future results. Rule-based systems can fail during unprecedented market conditions. Users are strictly responsible for conducting their own research and evaluating their financial circumstances and risk tolerance before making investment decisions.
+The outputs generated by this system are research signals and decision-support information. Nothing in this project constitutes financial, investment, tax, or trading advice. Users are strictly responsible for conducting their own research and evaluating their own financial circumstances and risk tolerance before making any investment decisions.
+
+---
+
+## Author
+
+**Yash Keram**
+
+Quantitative research focused on:
+* Indian equity markets
+* Volatility Regime Decision Systems
+* Factor investing
+* Systematic portfolio construction
+* Data-driven investment research
+
+### Related Research
+This project forms part of a broader quantitative research portfolio exploring:
+* NIFTY IT Multi-Factor Research Platform
+* Indian Equity Sector Rotation
+* Systematic factor strategies
+
+⭐ *If you find this research useful or interesting, consider giving the repository a star!*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
