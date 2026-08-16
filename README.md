@@ -1,90 +1,141 @@
-# ============================================================
-# PYTHON
-# ============================================================
+# Volatility Regime Decision System
 
-__pycache__/
-*.py[cod]
-*$py.class
+**A Quantitative Finance & Information Systems Research Project**  
+*By Yash Keram* | [GitHub Profile](https://github.com/yashkeram)
 
-# ============================================================
-# VIRTUAL ENVIRONMENT
-# ============================================================
+This project is a quantitative research and decision-support framework designed to analyze the **NIFTY 50 Index**. By evaluating market trends, historical volatility, and drawdown conditions, the system detects prevailing market regimes and translates them into structured capital allocation guidance.
 
-.venv/
-venv/
-env/
-ENV/
+---
 
-# ============================================================
-# JUPYTER
-# ============================================================
+## Decision Philosophy
 
-.ipynb_checkpoints/
+Markets can be bullish or bearish under vastly different conditions (e.g., *Low Volatility Bull* vs. *High Volatility Bull*). This system attempts to classify the market environment before determining the appropriate portfolio response based on the following principles:
 
-# ============================================================
-# IDE / EDITOR
-# ============================================================
+*   **Layered Architecture:** Separate measurement, classification, and decision-making.
+*   **Independent Risk Assessment:** Treat risk and volatility as independent dimensions from the price trend.
+*   **Capital Preservation:** Convert market conditions into explicit exposure guidance, preserving capital when risk conditions deteriorate.
+*   **Transparency over Black Box:** Utilize explicit, inspectable decision rules rather than opaque signals.
 
-.vscode/
-.idea/
+## Methodological Framework
 
-# ============================================================
-# OS FILES
-# ============================================================
+The architecture follows a strict, layered sequence where each stage depends on the preceding output:
 
-.DS_Store
-Thumbs.db
-desktop.ini
+```text
+Raw Market Data 
+       │
+       ▼
+Validated Market Data (Measurement)
+       │
+       ▼
+Derived Market Features
+       │
+       ▼
+Volatility State 
+       │
+       ▼
+Market Regime (Classification)
+       │
+       ▼
+Decision State (Decision)
+       │
+       ▼
+Explicit Decision Rules
+       │
+       ▼
+Capital Allocation (Allocation)
+```
 
-# ============================================================
-# PYTHON / TOOLING
-# ============================================================
+---
 
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+## Project Structure
 
-# ============================================================
-# LOCAL SECRETS / ENVIRONMENT
-# ============================================================
+```text
+Volatility-Regime-Decision-System-Refurbished/
+│
+├── Data/
+│   ├── Raw/               # nifty50_raw.csv
+│   └── Processed/         # Layered analytical datasets
+│
+├── Notebooks/             # Exploratory analysis
+├── Outputs/               # Charts, Reports, and Tables
+├── Python/                # Core pipeline scripts (01 to 08)
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
 
-.env
-.env.*
-!.env.example
+---
 
-# ============================================================
-# TEMPORARY FILES
-# ============================================================
+## The Analytical Pipeline
 
-*.tmp
-*.temp
-*.log
+The system processes 2,860 trading observations (2015-01-02 to 2026-08-14) across 8 sequential modules. 
 
-# ============================================================
-# PROJECT OUTPUTS
-# ============================================================
+| Module | Purpose | Key Outputs / Features | Output File |
+| :--- | :--- | :--- | :--- |
+| **01. Data Ingestion** | Downloads historical NIFTY 50 (`^NSEI`) data. | Raw OHLCV data. | `nifty50_raw.csv` |
+| **02. Data Cleaning** | Validates and cleans raw data. | Log returns, missing value checks. | `nifty50_clean.csv` |
+| **03. Feature Engineering** | Creates technical/statistical features. | Moving Averages, Volatility Ratios, ATR, Drawdowns. | `nifty50_features.csv` |
+| **04. Volatility Model** | Builds a multi-dimensional volatility profile. | Volatility Term Spread, Acceleration, Stress Score. | `nifty50_volatility_model.csv` |
+| **05. Regime Detection** | Identifies the prevailing market regime. | E.g., *Low Volatility Bull*, *Crisis Bear*. | `nifty50_regime_detection.csv` |
+| **06. Decision Logic** | Translates regime into a structured decision. | Market Bias, Exposure Guidance, Portfolio Posture. | `nifty50_decision_logic.csv` |
+| **07. Decision Rules** | Applies explicit, rule-based bounds. | Rule Scores, System Actions (e.g., REVIEW). | `nifty50_decision_rules.csv` |
+| **08. Capital Allocation**| Converts logic to portfolio allocation. | Target Equity/Cash Exposure, Position Size Guidance. | `nifty50_capital_allocation.csv` |
 
-# Generated charts
-Outputs/Charts/
+> **Latest Verified Snapshot (Aug 14, 2026):**  
+> The system classified the NIFTY 50 as a **Low Volatility Bull** regime, suggesting a **Balanced** capital posture with a target equity exposure of **55.00%**.
 
-# Generated reports
-Outputs/Reports/
+---
 
-# Generated tables
-Outputs/Tables/
+## Getting Started & Reproducibility 
 
-# ============================================================
-# LARGE / GENERATED DATA
-# ============================================================
+### Prerequisites
+*   **Python 3.x**
 
-# Keep raw and processed datasets out of GitHub by default.
-# These files are generated by the Python pipeline.
+### 1. Setup the Virtual Environment
 
-Data/Raw/
-Data/Processed/
+**Windows PowerShell:**
+```powershell
+# Create virtual environment
+python -m venv .venv
 
-# ============================================================
-# LOCAL CACHE
-# ============================================================
+# Activate it
+.\.venv\Scripts\Activate.ps1
 
-.cache/
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 2. Run the Pipeline
+
+Execute the modules sequentially. Each script relies on the `.csv` generated by the previous step:
+
+```powershell
+python Python\01_data_ingestion.py
+python Python\02_data_cleaning.py
+python Python\03_feature_engineering.py
+python Python\04_volatility_model.py
+python Python\05_regime_detection.py
+python Python\06_decision_logic.py
+python Python\07_decision_rules.py
+python Python\08_capital_allocation.py
+```
+
+---
+
+## Future Development
+
+While currently functional, planned extensions for this framework include:
+
+*   **Data & Features:** Integration of India VIX, macroeconomic variables, and cross-asset confirmation.
+*   **Validation:** Walk-forward validation, robust backtesting, and out-of-sample testing.
+*   **Real-World Modeling:** Transaction cost modeling, tax implications, and portfolio-level performance attribution.
+*   **Reporting:** Interactive dashboards and automated scenario/stress testing.
+
+---
+
+## Disclaimer & Limitations
+
+**For educational, research, and quantitative-analysis purposes only.** 
+
+The outputs generated by this system are research signals and decision-support information. They should **not** be interpreted as financial advice, investment recommendations, or guarantees of future performance. Historical data does not guarantee future results. Rule-based systems can fail during unprecedented market conditions. Users are strictly responsible for conducting their own research and evaluating their financial circumstances and risk tolerance before making investment decisions.
